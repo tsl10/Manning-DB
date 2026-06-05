@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - KAMI MARINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 0;
+            background-color: #ffffff;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #475569;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .nav-links a:hover {
+            color: #0f172a;
+        }
+
+        .nav-links span {
+            font-weight: 600;
+            color: #854d0e;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #facc15;
+            color: #0f172a;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #eab308;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-outline:hover {
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
+
+        /* Dashboard Content */
+        .dashboard-header {
+            padding: 48px 0;
+        }
+
+        .dashboard-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .dashboard-header p {
+            font-size: 16px;
+            color: #64748b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .stat-card h3 {
+            font-size: 13px;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #854d0e;
+        }
+
+        /* Users Section */
+        .users-section {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            color: #0f172a;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #f8fafc;
+        }
+
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            font-size: 15px;
+            color: #1e293b;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .user-name {
+            font-weight: 500;
+        }
+
+        .user-email {
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header h1 {
+                font-size: 28px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 12px 8px;
+            }
+
+            .users-section {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="logo">KAMI MARINE</a>
+                <div class="nav-links">
+                    <span>Admin: <%= admin.username %></span>
+                    <a href="/logout" class="btn btn-outline">Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="dashboard-header">
+            <h1>Admin Dashboard</h1>
+            <p>Manage crew records and oversee maritime credentialing operations</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Seafarers</h3>
+                <div class="stat-value"><%= users.length %></div>
+            </div>
+            <div class="stat-card">
+                <h3>Active Profiles</h3>
+                <div class="stat-value"><%= users.length %></div>
+            </div>
+            <div class="stat-card">
+                <h3>Positions Available</h3>
+                <div class="stat-value">30+</div>
+            </div>
+        </div>
+
+        <div class="users-section">
+            <h2 class="section-title">Crew Roster</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Position</th>
+                            <th>Phone</th>
+                            <th>Date Available</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(function(user) { %>
+                            <tr>
+                                <td>
+                                    <div class="user-name"><%= user.FNAME %> <%= user.LNAME %></div>
+                                </td>
+                                <td>
+                                    <div class="user-email"><%= user.EMAIL %></div>
+                                </td>
+                                <td><%= user.position_applied %></td>
+                                <td><%= user.PHONE_NUMBER %></td>
+                                <td><%= user.date_available %></td>
+                                <td><span class="status-badge">Active</span></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

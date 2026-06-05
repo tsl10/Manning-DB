@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - KAMI MARINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            padding: 24px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            text-decoration: none;
+        }
+        .btn {
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        .btn-outline {
+            background-color: transparent;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+        .btn-outline:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+        .btn-primary {
+            background-color: #0f172a;
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #1e293b;
+        }
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        .page-header {
+            margin-bottom: 24px;
+        }
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .page-header a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .form-container {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 32px;
+        }
+        .section {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .subsection-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 24px 0 16px 0;
+            color: #475569;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #334155;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #0f172a;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .checkbox-group input {
+            transform: scale(1.3);
+        }
+        .list-item {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .list-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .list-item-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .list-item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .list-item-field {
+            font-size: 14px;
+        }
+        .list-item-field-label {
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 24px;
+            color: #64748b;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+        }
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 2px solid #e2e8f0;
+        }
+        .form-actions .btn {
+            padding: 14px 28px;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="logo">KAMI MARINE</a>
+            <div style="display: flex; gap: 12px;">
+                <a href="/dashboard" class="btn btn-outline">Back to Dashboard</a>
+                <a href="/logout" class="btn btn-outline">Logout</a>
+            </div>
+        </header>
+        <div class="page-header">
+            <a href="/dashboard">← Back</a>
+            <h1>Edit Profile</h1>
+        </div>
+        <div class="form-container">
+            <form method="POST" action="/profile/edit">
+                <!-- 1. Applicant Details -->
+                <div class="section">
+                    <h3 class="section-title">Applicant Details</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>First Name *</label>
+                            <input type="text" name="fname" value="<%= user.fname %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" name="lname" value="<%= user.lname %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" name="email" value="<%= user.email %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select name="gender">
+                                <option value="">Select Gender</option>
+                                <option value="Male" <%= user.gender === 'Male' ? 'selected' : '' %>>Male</option>
+                                <option value="Female" <%= user.gender === 'Female' ? 'selected' : '' %>>Female</option>
+                                <option value="Other" <%= user.gender === 'Other' ? 'selected' : '' %>>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" name="phone_number" value="<%= user.phone_number %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Department</label>
+                            <select id="department" name="department">
+                                <option value="">Select Department</option>
+                                <option value="Deck" <%= user.department === 'Deck' ? 'selected' : '' %>>Deck</option>
+                                <option value="Engine" <%= user.department === 'Engine' ? 'selected' : '' %>>Engine</option>
+                                <option value="Catering" <%= user.department === 'Catering' ? 'selected' : '' %>>Catering</option>
+                                <option value="Specialist" <%= user.department === 'Specialist' ? 'selected' : '' %>>Specialist</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Rank</label>
+                            <select id="rank" name="rank">
+                                <option value="">Select Rank</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Date Available</label>
+                            <input type="date" name="date_available" value="<%= user.date_available %>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Personal Information -->
+                <div class="section">
+                    <h3 class="section-title">Personal Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Date of Birth * (must be 18+)</label>
+                            <input type="date" name="date_of_birth" value="<%= user.date_of_birth %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Place of Birth</label>
+                            <input type="text" name="place_of_birth" value="<%= user.place_of_birth %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Nationality</label>
+                            <input type="text" name="nationality" value="<%= user.nationality %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Height (cm)</label>
+                            <input type="number" name="height_cm" value="<%= user.height_cm %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Weight (kg)</label>
+                            <input type="number" name="weight_kg" value="<%= user.weight_kg %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Eye Color</label>
+                            <input type="text" name="eye_color" value="<%= user.eye_color %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Marital Status</label>
+                            <select name="marital_status">
+                                <option value="">Select Marital Status</option>
+                                <option value="Single" <%= user.marital_status === 'Single' ? 'selected' : '' %>>Single</option>
+                                <option value="Married" <%= user.marital_status === 'Married' ? 'selected' : '' %>>Married</option>
+                                <option value="Divorced" <%= user.marital_status === 'Divorced' ? 'selected' : '' %>>Divorced</option>
+                                <option value="Widowed" <%= user.marital_status === 'Widowed' ? 'selected' : '' %>>Widowed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Father Name</label>
+                            <input type="text" name="father_name" value="<%= user.father_name %>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Home Address -->
+                <div class="section">
+                    <h3 class="section-title">Home Address</h3>
+                    <div class="form-group">
+                        <label>Home Address</label>
+                        <textarea name="home_address"><%= user.home_address %></textarea>
+                    </div>
+                </div>
+
+                <!-- 4. Passport Information -->
+                <div class="section">
+                    <h3 class="section-title">Passport Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Passport Number</label>
+                            <input type="text" name="passport_number" value="<%= user.passport?.number %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Issue Date</label>
+                            <input type="date" name="passport_issue_date" value="<%= user.passport?.issue_date %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="date" name="passport_expiry_date" value="<%= user.passport?.expiry_date %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Issue Place</label>
+                            <input type="text" name="passport_place_of_issue" value="<%= user.passport?.place_of_issue %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Issued By</label>
+                            <input type="text" name="passport_issued_by" value="<%= user.passport?.issued_by %>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Seaman Book -->
+                <div class="section">
+                    <h3 class="section-title">Seaman Book</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Seaman Book No</label>
+                            <input type="text" name="seaman_book_number" value="<%= user.seaman_book?.number %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Issue Date</label>
+                            <input type="date" name="seaman_book_issue_date" value="<%= user.seaman_book?.issue_date %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="date" name="seaman_book_expiry_date" value="<%= user.seaman_book?.expiry_date %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Issued By</label>
+                            <input type="text" name="seaman_book_issued_by" value="<%= user.seaman_book?.issued_by %>">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Experience -->
+                <div class="section">
+                    <h3 class="section-title">Experience</h3>
+                    <% if (user.experiences && user.experiences.length > 0) { %>
+                        <h4 class="subsection-title">Current Experience</h4>
+                        <% user.experiences.forEach(exp => { %>
+                            <div class="list-item">
+                                <div class="list-item-header">
+                                    <div class="list-item-title"><%= exp.vessel_name %> | <%= exp.rank %></div>
+                                    <div style="font-weight: 600; color: #0f172a;"><%= exp.months %> Months</div>
+                                </div>
+                                <div class="list-item-grid">
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Company</div>
+                                        <div><%= exp.company_name %></div>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Vessel Type</div>
+                                        <div><%= exp.type %></div>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Sign On</div>
+                                        <div><%= exp.sign_on %></div>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Sign Off</div>
+                                        <div><%= exp.sign_off %></div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="empty-state">No experience added yet</div>
+                    <% } %>
+                    <h4 class="subsection-title">Add New Experience</h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" name="new_exp_company_name">
+                        </div>
+                        <div class="form-group">
+                            <label>Vessel Name</label>
+                            <input type="text" name="new_exp_vessel_name">
+                        </div>
+                        <div class="form-group">
+                            <label>Vessel Type</label>
+                            <select name="new_exp_type">
+                                <option value="">Select Vessel Type</option>
+                                <option value="Bulk Carrier">Bulk Carrier</option>
+                                <option value="General Cargo Ship">General Cargo Ship</option>
+                                <option value="Cargo Ship">Cargo Ship</option>
+                                <option value="Container Ship">Container Ship</option>
+                                <option value="Cement Carrier">Cement Carrier</option>
+                                <option value="Log Carrier">Log Carrier</option>
+                                <option value="Woodchip Carrier">Woodchip Carrier</option>
+                                <option value="Reefer Vessel">Reefer Vessel</option>
+                                <option value="Chemical Tanker">Chemical Tanker</option>
+                                <option value="Crude Oil Tanker">Crude Oil Tanker</option>
+                                <option value="Oil Tanker">Oil Tanker</option>
+                                <option value="Product Tanker">Product Tanker</option>
+                                <option value="LPG Tanker">LPG Tanker</option>
+                                <option value="LNG Tanker">LNG Tanker</option>
+                                <option value="Bitumen Carrier">Bitumen Carrier</option>
+                                <option value="Ro-Ro Vessel">Ro-Ro Vessel</option>
+                                <option value="PC/PT Carrier">PC/PT Carrier</option>
+                                <option value="Anchor Handling Vessel">Anchor Handling Vessel</option>
+                                <option value="Offshore Support Vessel">Offshore Support Vessel</option>
+                                <option value="DP Vessel">DP Vessel</option>
+                                <option value="Cable Laying Vessel">Cable Laying Vessel</option>
+                                <option value="Floating Crane">Floating Crane</option>
+                                <option value="Oil Platform">Oil Platform</option>
+                                <option value="Oil Rig">Oil Rig</option>
+                                <option value="Dredger">Dredger</option>
+                                <option value="Tug Boat">Tug Boat</option>
+                                <option value="Hovercraft">Hovercraft</option>
+                                <option value="Icebreaker">Icebreaker</option>
+                                <option value="Cruise Ship">Cruise Ship</option>
+                                <option value="Fishing Vessel">Fishing Vessel</option>
+                                <option value="Trawler">Trawler</option>
+                                <option value="Research Vessel">Research Vessel</option>
+                                <option value="Sailing Vessel">Sailing Vessel</option>
+                                <option value="Yacht">Yacht</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Rank</label>
+                            <input type="text" name="new_exp_rank">
+                        </div>
+                        <div class="form-group">
+                            <label>Sign On Date</label>
+                            <input type="date" name="new_exp_sign_on">
+                        </div>
+                        <div class="form-group">
+                            <label>Sign Off Date</label>
+                            <input type="date" name="new_exp_sign_off">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Certificates -->
+                <div class="section">
+                    <h3 class="section-title">Certificates</h3>
+                    <% if (user.certificates && user.certificates.length > 0) { %>
+                        <h4 class="subsection-title">Current Certificates</h4>
+                        <% user.certificates.forEach(cert => { %>
+                            <div class="list-item">
+                                <div class="list-item-header">
+                                    <div class="list-item-title"><%= cert.name %></div>
+                                </div>
+                                <div class="list-item-grid">
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Certificate No</div>
+                                        <div><%= cert.certificate_no %></div>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Issued By</div>
+                                        <div><%= cert.issued_by %></div>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Issue Date</div>
+                                        <div><%= cert.issue_date %></div>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Expiry Date</div>
+                                        <div><%= cert.expiry_date %></div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="empty-state">No certificates added yet</div>
+                    <% } %>
+                    <h4 class="subsection-title">Add New Certificate</h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Certificate Name</label>
+                            <input type="text" name="new_cert_name">
+                        </div>
+                        <div class="form-group">
+                            <label>Certificate No</label>
+                            <input type="text" name="new_cert_certificate_no">
+                        </div>
+                        <div class="form-group">
+                            <label>Issued By</label>
+                            <input type="text" name="new_cert_issued_by">
+                        </div>
+                        <div class="form-group">
+                            <label>Issue Date</label>
+                            <input type="date" name="new_cert_issue_date">
+                        </div>
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="date" name="new_cert_expiry_date">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Licences & Documents -->
+                <div class="section">
+                    <h3 class="section-title">Licences & Documents</h3>
+                    <% if (user.licences && user.licences.length > 0) { %>
+                        <h4 class="subsection-title">Current Licences</h4>
+                        <% user.licences.forEach(lic => { %>
+                            <div class="list-item">
+                                <div class="list-item-header">
+                                    <div class="list-item-title"><%= lic.name %> (<%= lic.type %>)</div>
+                                </div>
+                                <div class="list-item-grid">
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Number</div>
+                                        <div><%= lic.number %></div>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Grade</div>
+                                        <div><%= lic.grade || '-' %></div>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Issue Date</div>
+                                        <div><%= lic.issue_date %></div>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Expiry Date</div>
+                                        <div><%= lic.expiry_date %></div>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Issued Place</div>
+                                        <div><%= lic.issued_place %></div>
+                                    </div>
+                                    <div class="list-item-field">
+                                        <div class="list-item-field-label">Issued By</div>
+                                        <div><%= lic.issued_by %></div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="empty-state">No licences added yet</div>
+                    <% } %>
+                    <h4 class="subsection-title">Add New Licence</h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Type</label>
+                            <input type="text" name="new_lic_type">
+                        </div>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="new_lic_name">
+                        </div>
+                        <div class="form-group">
+                            <label>Number</label>
+                            <input type="text" name="new_lic_number">
+                        </div>
+                        <div class="form-group">
+                            <label>Grade</label>
+                            <input type="text" name="new_lic_grade">
+                        </div>
+                        <div class="form-group">
+                            <label>Issue Date</label>
+                            <input type="date" name="new_lic_issue_date">
+                        </div>
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="date" name="new_lic_expiry_date">
+                        </div>
+                        <div class="form-group">
+                            <label>Issued Place</label>
+                            <input type="text" name="new_lic_issued_place">
+                        </div>
+                        <div class="form-group">
+                            <label>Issued By</label>
+                            <input type="text" name="new_lic_issued_by">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. Medical & Fitness Certificate -->
+                <div class="section">
+                    <h3 class="section-title">Medical & Fitness Certificate</h3>
+                    <% if (user.medical_cert?.has_medical) { %>
+                        <h4 class="subsection-title">Medical Certificate</h4>
+                        <div class="list-item">
+                            <div class="list-item-grid">
+                                <div class="list-item-field">
+                                    <div class="list-item-field-label">Certificate Number</div>
+                                    <div><%= user.medical_cert?.medical?.certificate_number || '-' %></div>
+                                </div>
+                                <div class="list-item-field">
+                                    <div class="list-item-field-label">Issued By</div>
+                                    <div><%= user.medical_cert?.medical?.issued_by || '-' %></div>
+                                </div>
+                                <div class="list-item-field">
+                                    <div class="list-item-field-label">Issue Date</div>
+                                    <div><%= user.medical_cert?.medical?.issue_date || '-' %></div>
+                                </div>
+                                <div class="list-item-field">
+                                    <div class="list-item-field-label">Expiry Date</div>
+                                    <div><%= user.medical_cert?.medical?.expiry_date || '-' %></div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                    <% if (user.medical_cert?.has_yellow_fever) { %>
+                        <h4 class="subsection-title">Yellow Fever Certificate</h4>
+                        <div class="list-item">
+                            <div class="list-item-grid">
+                                <div class="list-item-field">
+                                    <div class="list-item-field-label">Certificate Number</div>
+                                    <div><%= user.medical_cert?.yellow_fever?.certificate_number || '-' %></div>
+                                </div>
+                                <div class="list-item-field">
+                                    <div class="list-item-field-label">Issued By</div>
+                                    <div><%= user.medical_cert?.yellow_fever?.issued_by || '-' %></div>
+                                </div>
+                                <div class="list-item-field">
+                                    <div class="list-item-field-label">Issue Date</div>
+                                    <div><%= user.medical_cert?.yellow_fever?.issue_date || '-' %></div>
+                                </div>
+                                <div class="list-item-field">
+                                    <div class="list-item-field-label">Expiry Date</div>
+                                    <div><%= user.medical_cert?.yellow_fever?.expiry_date || '-' %></div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                    <h4 class="subsection-title">Update Medical Certificates</h4>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="has_medical" name="has_medical" <%= user.medical_cert?.has_medical ? 'checked' : '' %>>
+                        <label for="has_medical" style="margin-bottom:0; font-weight:600;">I have a Medical & Fitness Certificate</label>
+                    </div>
+                    <div id="medical_fields" class="form-grid" style="display: <%= user.medical_cert?.has_medical ? 'grid' : 'none' %>;">
+                        <div class="form-group">
+                            <label>Certificate Number</label>
+                            <input type="text" name="med_certificate_number" value="<%= user.medical_cert?.medical?.certificate_number %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Issued By</label>
+                            <input type="text" name="med_issued_by" value="<%= user.medical_cert?.medical?.issued_by %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Issue Date</label>
+                            <input type="date" name="med_issue_date" value="<%= user.medical_cert?.medical?.issue_date %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="date" name="med_expiry_date" value="<%= user.medical_cert?.medical?.expiry_date %>">
+                        </div>
+                    </div>
+                    <div class="checkbox-group" style="margin-top:24px;">
+                        <input type="checkbox" id="has_yellow_fever" name="has_yellow_fever" <%= user.medical_cert?.has_yellow_fever ? 'checked' : '' %>>
+                        <label for="has_yellow_fever" style="margin-bottom:0; font-weight:600;">I have a Yellow Fever Certificate</label>
+                    </div>
+                    <div id="yellow_fever_fields" class="form-grid" style="display: <%= user.medical_cert?.has_yellow_fever ? 'grid' : 'none' %>;">
+                        <div class="form-group">
+                            <label>Certificate Number</label>
+                            <input type="text" name="yf_certificate_number" value="<%= user.medical_cert?.yellow_fever?.certificate_number %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Issued By</label>
+                            <input type="text" name="yf_issued_by" value="<%= user.medical_cert?.yellow_fever?.issued_by %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Issue Date</label>
+                            <input type="date" name="yf_issue_date" value="<%= user.medical_cert?.yellow_fever?.issue_date %>">
+                        </div>
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="date" name="yf_expiry_date" value="<%= user.medical_cert?.yellow_fever?.expiry_date %>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/dashboard" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save All Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Department -> Rank mapping
+        const ranks = {
+            'Deck': ['Master', 'Additional Master', 'Chief Officer', '2nd Officer', '3rd Officer', 'Junior Deck Officer', 'Radio Officer', 'Security Officer', 'Trainee Officer', 'Deck Watchkeeper', 'Cadet Deck', 'Pumpman', 'Bosun', 'Deck Welder', 'Able Seaman', 'Ordinary Seaman', 'Deck Boy', 'Tug Mate', 'Tug Master', 'Crane Operator'],
+            'Engine': ['Chief Engineer', 'Chief Electrical Engineer', '2nd Engineer', '2nd Asst Engineer', '3rd Engineer', '3rd Asst Engineer', '4th Engineer', '5th Engineer', 'Cargo Gas Engineer', 'Electrical Engineer', 'ETO', 'Electronics Engineer', 'Electrician', 'Junior Engineer', 'Trainee Engineer', 'Cadet Engine', 'Fitter', 'Motorman', 'Oiler', 'Wiper', 'Engine Boy'],
+            'Specialist': ['Medic', 'Carpenter', 'Repairman', 'Security Guard', 'Ship Clerk', 'Staff Captain', 'Supercargo', 'Fireman', 'Repair Supervisor', 'Leading Hand', 'Deck Super', 'Eng Super', 'Supernumerary', 'Pilot', 'Relief Master', 'Riding Team Deck', 'Riding Team Eng', 'Other'],
+            'Catering': ['Chief Cook', '2nd Cook', '3rd Chef', '4th Chef', 'Assistant Cook', 'Cook/Steward', 'Catering Assistant', 'Purser', 'Chief Steward', 'Steward/(Ess)', 'Cabin Stewardess', 'Messman', 'Chief Housekeeper', 'Housekeeper', 'Laundryman']
+        };
+
+        // Initialize rank dropdown
+        const departmentSelect = document.getElementById('department');
+        const rankSelect = document.getElementById('rank');
+        const currentRank = '<%= user.rank %>';
+
+        // Update rank options when department changes
+        function updateRankOptions() {
+            const selectedDept = departmentSelect.value;
+            rankSelect.innerHTML = '<option value="">Select Rank</option>';
+            if (selectedDept && ranks[selectedDept]) {
+                ranks[selectedDept].forEach(r => {
+                    const option = document.createElement('option');
+                    option.value = r;
+                    option.textContent = r;
+                    if (r === currentRank) option.selected = true;
+                    rankSelect.appendChild(option);
+                });
+            }
+        }
+        updateRankOptions();
+        departmentSelect.addEventListener('change', updateRankOptions);
+
+        // Toggle medical fields
+        document.getElementById('has_medical').addEventListener('change', function() {
+            document.getElementById('medical_fields').style.display = this.checked ? 'grid' : 'none';
+        });
+        document.getElementById('has_yellow_fever').addEventListener('change', function() {
+            document.getElementById('yellow_fever_fields').style.display = this.checked ? 'grid' : 'none';
+        });
+    </script>
+</body>
+</html>

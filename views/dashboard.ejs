@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - KAMI MARINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-outline:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .btn-primary {
+            background-color: #0f172a;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #1e293b;
+        }
+
+        .dashboard-header {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .info-item {
+            padding: 16px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .info-item-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .info-item-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: #0f172a;
+        }
+
+        .list-item {
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .list-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .list-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .list-item-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .list-item-badge {
+            background-color: #0f172a;
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="logo">KAMI MARINE</a>
+            <div class="header-right">
+                <span style="font-weight: 600;"><%= user.fname %> <%= user.lname %></span>
+                <a href="/profile/edit" class="btn btn-outline">Edit Profile</a>
+                <a href="/experience/add" class="btn btn-primary">Add Experience</a>
+                <a href="/certificate/add" class="btn btn-primary">Add Certificate</a>
+                <a href="/licence/add" class="btn btn-primary">Add Licence</a>
+                <a href="/medical/add" class="btn btn-primary">Add Medical</a>
+                <a href="/logout" class="btn btn-outline">Logout</a>
+            </div>
+        </header>
+
+        <div class="dashboard-header">
+            <h1>Dashboard</h1>
+        </div>
+
+        <!-- 1. Applicant Details -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Applicant Details</h3>
+            </div>
+            <div class="card-grid">
+                <div class="info-item">
+                    <div class="info-item-label">First Name</div>
+                    <div class="info-item-value"><%= user.fname || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Last Name</div>
+                    <div class="info-item-value"><%= user.lname || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Email</div>
+                    <div class="info-item-value"><%= user.email || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Gender</div>
+                    <div class="info-item-value"><%= user.gender || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Phone Number</div>
+                    <div class="info-item-value"><%= user.phone_number || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Position Applied</div>
+                    <div class="info-item-value"><%= user.rank || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Date Available</div>
+                    <div class="info-item-value"><%= user.date_available || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Department</div>
+                    <div class="info-item-value"><%= user.department || '-' %></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Personal Information -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Personal Information</h3>
+            </div>
+            <div class="card-grid">
+                <div class="info-item">
+                    <div class="info-item-label">Date of Birth</div>
+                    <div class="info-item-value"><%= user.date_of_birth || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Place of Birth</div>
+                    <div class="info-item-value"><%= user.place_of_birth || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Nationality</div>
+                    <div class="info-item-value"><%= user.nationality || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Height (cm)</div>
+                    <div class="info-item-value"><%= user.height_cm || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Weight (kg)</div>
+                    <div class="info-item-value"><%= user.weight_kg || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Eye Color</div>
+                    <div class="info-item-value"><%= user.eye_color || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Marital Status</div>
+                    <div class="info-item-value"><%= user.marital_status || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Father Name</div>
+                    <div class="info-item-value"><%= user.father_name || '-' %></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Passport Information -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Passport Information</h3>
+            </div>
+            <div class="card-grid">
+                <div class="info-item">
+                    <div class="info-item-label">Passport Number</div>
+                    <div class="info-item-value"><%= user.passport?.number || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Issue Date</div>
+                    <div class="info-item-value"><%= user.passport?.issue_date || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Issue Place</div>
+                    <div class="info-item-value"><%= user.passport?.place_of_issue || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Expiry Date</div>
+                    <div class="info-item-value"><%= user.passport?.expiry_date || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Issued By</div>
+                    <div class="info-item-value"><%= user.passport?.issued_by || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Seaman Book No</div>
+                    <div class="info-item-value"><%= user.seaman_book?.number || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Seaman Book Issue Date</div>
+                    <div class="info-item-value"><%= user.seaman_book?.issue_date || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Seaman Book Expiry Date</div>
+                    <div class="info-item-value"><%= user.seaman_book?.expiry_date || '-' %></div>
+                </div>
+                <div class="info-item">
+                    <div class="info-item-label">Seaman Book Issued By</div>
+                    <div class="info-item-value"><%= user.seaman_book?.issued_by || '-' %></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Home Address -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Home Address</h3>
+            </div>
+            <div class="info-item">
+                <div class="info-item-label">Home Address</div>
+                <div class="info-item-value"><%= user.home_address || '-' %></div>
+            </div>
+        </div>
+
+        <!-- 5. Certificates -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Certificates</h3>
+            </div>
+            <% if (user.certificates && user.certificates.length > 0) { %>
+                <% user.certificates.forEach(cert => { %>
+                    <div class="list-item">
+                        <div class="list-item-header">
+                            <div class="list-item-title"><%= cert.name %></div>
+                        </div>
+                        <div class="card-grid">
+                            <div class="info-item">
+                                <div class="info-item-label">Certificate Name</div>
+                                <div class="info-item-value"><%= cert.name %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Certificate No</div>
+                                <div class="info-item-value"><%= cert.certificate_no %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Issue Date</div>
+                                <div class="info-item-value"><%= cert.issue_date %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Expiry Date</div>
+                                <div class="info-item-value"><%= cert.expiry_date %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Issued By</div>
+                                <div class="info-item-value"><%= cert.issued_by %></div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-state">No certificates added yet</div>
+            <% } %>
+        </div>
+
+        <!-- 6. Experience -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Experience</h3>
+            </div>
+            <% if (user.experiences && user.experiences.length > 0) { %>
+                <% user.experiences.forEach(exp => { %>
+                    <div class="list-item">
+                        <div class="list-item-header">
+                            <div class="list-item-title"><%= exp.vessel_name %></div>
+                            <span class="list-item-badge"><%= exp.months %> Months</span>
+                        </div>
+                        <div class="card-grid">
+                            <div class="info-item">
+                                <div class="info-item-label">Company Name</div>
+                                <div class="info-item-value"><%= exp.company_name %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Vessel Name</div>
+                                <div class="info-item-value"><%= exp.vessel_name %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Type</div>
+                                <div class="info-item-value"><%= exp.type %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Rank</div>
+                                <div class="info-item-value"><%= exp.rank %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Sign-In Date</div>
+                                <div class="info-item-value"><%= exp.sign_on %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Sign-Off Date</div>
+                                <div class="info-item-value"><%= exp.sign_off %></div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-state">No experiences added yet</div>
+            <% } %>
+        </div>
+
+        <!-- 7. Licences & Documents -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Licences & Documents</h3>
+            </div>
+            <% if (user.licences && user.licences.length > 0) { %>
+                <% user.licences.forEach(lic => { %>
+                    <div class="list-item">
+                        <div class="list-item-header">
+                            <div class="list-item-title"><%= lic.name %></div>
+                        </div>
+                        <div class="card-grid">
+                            <div class="info-item">
+                                <div class="info-item-label">Type</div>
+                                <div class="info-item-value"><%= lic.type %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Name</div>
+                                <div class="info-item-value"><%= lic.name %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Number</div>
+                                <div class="info-item-value"><%= lic.number %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Grade</div>
+                                <div class="info-item-value"><%= lic.grade || '-' %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Issue Date</div>
+                                <div class="info-item-value"><%= lic.issue_date %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Expiry Date</div>
+                                <div class="info-item-value"><%= lic.expiry_date %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Issue Place</div>
+                                <div class="info-item-value"><%= lic.issued_place %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-item-label">Issued By</div>
+                                <div class="info-item-value"><%= lic.issued_by %></div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-state">No licences added yet</div>
+            <% } %>
+        </div>
+
+        <!-- 8. Medical & Fitness Certificate -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Medical & Fitness Certificate</h3>
+            </div>
+            <% if (user.medical_cert?.has_medical) { %>
+                <div class="list-item" style="margin-bottom: 24px;">
+                    <div class="list-item-header">
+                        <div class="list-item-title">Medical Certificate</div>
+                    </div>
+                    <div class="card-grid">
+                        <div class="info-item">
+                            <div class="info-item-label">Certificate Number</div>
+                            <div class="info-item-value"><%= user.medical_cert?.medical?.certificate_number || '-' %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-item-label">Issued By</div>
+                            <div class="info-item-value"><%= user.medical_cert?.medical?.issued_by || '-' %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-item-label">Issue Date</div>
+                            <div class="info-item-value"><%= user.medical_cert?.medical?.issue_date || '-' %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-item-label">Expiry Date</div>
+                            <div class="info-item-value"><%= user.medical_cert?.medical?.expiry_date || '-' %></div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+            <% if (user.medical_cert?.has_yellow_fever) { %>
+                <div class="list-item">
+                    <div class="list-item-header">
+                        <div class="list-item-title">Yellow Fever Certificate</div>
+                    </div>
+                    <div class="card-grid">
+                        <div class="info-item">
+                            <div class="info-item-label">Certificate Number</div>
+                            <div class="info-item-value"><%= user.medical_cert?.yellow_fever?.certificate_number || '-' %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-item-label">Issued By</div>
+                            <div class="info-item-value"><%= user.medical_cert?.yellow_fever?.issued_by || '-' %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-item-label">Issue Date</div>
+                            <div class="info-item-value"><%= user.medical_cert?.yellow_fever?.issue_date || '-' %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-item-label">Expiry Date</div>
+                            <div class="info-item-value"><%= user.medical_cert?.yellow_fever?.expiry_date || '-' %></div>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+            <% if (!user.medical_cert?.has_medical && !user.medical_cert?.has_yellow_fever) { %>
+                <div class="empty-state">No medical certificates added yet</div>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

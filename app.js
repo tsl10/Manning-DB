@@ -291,15 +291,75 @@ app.post('/profile/edit', (req, res) => {
         has_yellow_fever, yf_certificate_number, yf_issued_by, yf_issue_date, yf_expiry_date
     } = req.body;
 
-    // Validate age (must be 18+)
+    const parseDate = (value) => {
+        if (!value) return null;
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return null;
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    };
+
+    const today = new Date();
+    const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
     if (date_of_birth) {
-        const dob = new Date(date_of_birth);
-        const today = new Date();
-        let age = today.getFullYear() - dob.getFullYear();
-        const m = today.getMonth() - dob.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+        const dob = parseDate(date_of_birth);
+        if (!dob) {
+            return res.send('<script>alert("Invalid date of birth"); window.location.href="/profile/edit";</script>');
+        }
+        if (dob > todayDate) {
+            return res.send('<script>alert("Date of birth cannot be in the future"); window.location.href="/profile/edit";</script>');
+        }
+        let age = todayDate.getFullYear() - dob.getFullYear();
+        const m = todayDate.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && todayDate.getDate() < dob.getDate())) age--;
         if (age < 18) {
             return res.send('<script>alert("You must be at least 18 years old"); window.location.href="/profile/edit";</script>');
+        }
+    }
+
+    const dateAvailable = parseDate(date_available);
+    if (date_available) {
+        if (!dateAvailable) {
+            return res.send('<script>alert("Invalid date available"); window.location.href="/profile/edit";</script>');
+        }
+        if (dateAvailable <= todayDate) {
+            return res.send('<script>alert("Date available must be in the future"); window.location.href="/profile/edit";</script>');
+        }
+    }
+
+    const passportIssueDate = parseDate(passport_issue_date || user.passport?.issue_date);
+    const passportExpiryDate = parseDate(passport_expiry_date || user.passport?.expiry_date);
+    if (passportIssueDate) {
+        if (passportIssueDate > todayDate) {
+            return res.send('<script>alert("Passport issue date cannot be in the future"); window.location.href="/profile/edit";</script>');
+        }
+    }
+    if (passportIssueDate && passportExpiryDate) {
+        if (passportExpiryDate <= passportIssueDate) {
+            return res.send('<script>alert("Passport expiry date must be after passport issue date"); window.location.href="/profile/edit";</script>');
+        }
+        const expectedPassportExpiry = new Date(passportIssueDate);
+        expectedPassportExpiry.setFullYear(expectedPassportExpiry.getFullYear() + 10);
+        if (passportExpiryDate.getTime() !== expectedPassportExpiry.getTime()) {
+            return res.send('<script>alert("Passport validity must be 10 years from the issue date"); window.location.href="/profile/edit";</script>');
+        }
+    }
+
+    const seamanIssueDate = parseDate(seaman_book_issue_date || user.seaman_book?.issue_date);
+    const seamanExpiryDate = parseDate(seaman_book_expiry_date || user.seaman_book?.expiry_date);
+    if (seamanIssueDate) {
+        if (seamanIssueDate > todayDate) {
+            return res.send('<script>alert("Seaman book issue date cannot be in the future"); window.location.href="/profile/edit";</script>');
+        }
+    }
+    if (seamanIssueDate && seamanExpiryDate) {
+        if (seamanExpiryDate <= seamanIssueDate) {
+            return res.send('<script>alert("Seaman book expiry date must be after seaman book issue date"); window.location.href="/profile/edit";</script>');
+        }
+        const expectedSeamanExpiry = new Date(seamanIssueDate);
+        expectedSeamanExpiry.setFullYear(expectedSeamanExpiry.getFullYear() + 10);
+        if (seamanExpiryDate.getTime() !== expectedSeamanExpiry.getTime()) {
+            return res.send('<script>alert("Seaman book validity must be 10 years from the issue date"); window.location.href="/profile/edit";</script>');
         }
     }
 

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile - KAMI MARINE</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script async src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection@2"></script>
     <style>
         * {
             margin: 0;
@@ -206,6 +208,136 @@
             padding: 14px 28px;
             font-size: 15px;
         }
+        .completion-bar-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #3b82f6 0%, #10b981 100%);
+            transition: width 0.3s ease;
+        }
+        .photo-guide-button {
+            background-color: #1d4ed8;
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        .photo-guide-button:hover {
+            background-color: #2563eb;
+        }
+        .photo-guide-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.65);
+            z-index: 9999;
+            padding: 24px;
+        }
+        .photo-guide-panel {
+            width: min(100%, 720px);
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+            overflow: hidden;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .photo-guide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+            padding: 28px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .photo-guide-header h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #0f172a;
+        }
+        .photo-guide-subtitle {
+            margin: 8px 0 0;
+            color: #475569;
+            line-height: 1.7;
+            max-width: 560px;
+        }
+        .photo-guide-close-btn {
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            color: #0f172a;
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .photo-guide-section {
+            padding: 24px 28px;
+        }
+        .photo-guide-section h3 {
+            margin: 0 0 18px;
+            font-size: 18px;
+            color: #0f172a;
+        }
+        .photo-example-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .photo-example-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+        }
+        .photo-example-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+        .photo-example-text {
+            padding: 14px 16px 18px;
+            color: #334155;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .photo-guide-note {
+            padding: 18px 28px 28px;
+            color: #334155;
+            font-size: 14px;
+            line-height: 1.75;
+            background: #f8fafc;
+        }
+        .status-success {
+            color: #0f766e;
+        }
+        .status-warning {
+            color: #92400e;
+        }
+        .status-danger {
+            color: #b91c1c;
+        }
+        .photo-help-text {
+            color: #475569;
+            margin-top: 8px;
+            display: block;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .visible-grid {
+            display: grid !important;
+        }
     </style>
 </head>
 <body>
@@ -221,8 +353,75 @@
             <a href="/dashboard">← Back</a>
             <h1>Edit Profile</h1>
         </div>
+        <!-- Profile Completion (always shown) -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div style="font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #64748b;">Profile Completion</div>
+            <%
+                let completedFieldsEdit = 0;
+                let totalFieldsEdit = 0;
+                
+                const requiredFieldsEdit = [
+                    user.fname, user.lname, user.email, user.phone_number, user.date_of_birth,
+                    user.place_of_birth, user.nationality, user.gender, user.height_cm, user.weight_kg,
+                    user.eye_color, user.marital_status, user.father_name, user.home_address,
+                    user.passport?.number, user.seaman_book?.number,
+                    user.profile_photo, user.experiences?.length > 0 ? 1 : 0,
+                    user.certificates?.length > 0 ? 1 : 0, user.licences?.length > 0 ? 1 : 0,
+                    user.medical_cert?.has_medical ? 1 : 0
+                ];
+                
+                requiredFieldsEdit.forEach(field => {
+                    totalFieldsEdit++;
+                    if (field) completedFieldsEdit++;
+                });
+                
+                const completionPercentEdit = Math.round((completedFieldsEdit / totalFieldsEdit) * 100);
+            %>
+            <div style="margin-bottom: 8px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 14px; color: #0f172a;"><strong><%= completionPercentEdit %>%</strong> Complete</span>
+                    <span style="font-size: 13px; color: #64748b;"><%= completedFieldsEdit %> of <%= totalFieldsEdit %> fields</span>
+                </div>
+                <div style="width: 100%; height: 24px; background-color: #e2e8f0; border-radius: 12px; overflow: hidden;">
+                    <div class="completion-bar-fill" data-progress="<%= completionPercentEdit %>"></div>
+                </div>
+            </div>
+        </div>
         <div class="form-container">
-            <form method="POST" action="/profile/edit">
+            <form method="POST" action="/profile/edit" enctype="multipart/form-data">
+                <!-- 0. Profile Photo -->
+                <div class="section" id="photoSection" data-has-profile-photo="<%= user.profile_photo ? 'true' : 'false' %>">
+                    <h3 class="section-title">Profile Photo</h3>
+                    
+                    <!-- Guide Button -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
+                        <div>
+                            <div class="form-group">
+                                <label>Upload Profile Photo *</label>
+                                <input type="file" id="profilePhotoInput" name="profile_photo" accept="image/*" style="padding: 10px; border: 2px dashed #3b82f6;">
+                                <small class="photo-help-text">
+                                    ✓ Clear face centered in the frame<br>
+                                    ✓ Neutral or light background<br>
+                                    ✓ No sunglasses, hats or group photos<br>
+                                    ✓ JPG or PNG format
+                                </small>
+                                <div id="faceDetectionStatus" style="margin-top: 12px; font-weight: 600; min-height: 30px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 8px; display: block;">Photo Preview</label>
+                            <% if (user.profile_photo) { %>
+                                <img id="photoPreview" src="<%= user.profile_photo %>" style="width: 200px; height: 250px; border-radius: 8px; object-fit: cover; border: 2px solid #e2e8f0;">
+                            <% } else { %>
+                                <div id="photoPreview" style="width: 200px; height: 250px; background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #94a3b8; text-align: center; padding: 16px;">
+                                    Upload a photo to see preview
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                    <canvas id="faceDetectionCanvas" style="display: none;"></canvas>
+                </div>
+
                 <!-- 1. Applicant Details -->
                 <div class="section">
                     <h3 class="section-title">Applicant Details</h3>
@@ -286,7 +485,8 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Date of Birth * (must be 18+)</label>
-                            <input type="date" name="date_of_birth" value="<%= user.date_of_birth %>" required max="<%= maxDob %>">
+                            <input id="date_of_birth" type="date" name="date_of_birth" value="<%= user.date_of_birth %>" required max="<%= maxDob %>">
+                            <div id="age_display" style="margin-top:8px; color:#475569; font-weight:600;"></div>
                         </div>
                         <div class="form-group">
                             <label>Place of Birth</label>
@@ -674,7 +874,7 @@
                         <input type="checkbox" id="has_medical" name="has_medical" <%= user.medical_cert?.has_medical ? 'checked' : '' %>>
                         <label for="has_medical" style="margin-bottom:0; font-weight:600;">I have a Medical & Fitness Certificate</label>
                     </div>
-                    <div id="medical_fields" class="form-grid" style="display: <%= user.medical_cert?.has_medical ? 'grid' : 'none' %>;">
+                    <div id="medical_fields" class="form-grid <%= user.medical_cert?.has_medical ? 'visible-grid' : 'hidden' %>">
                         <div class="form-group">
                             <label>Certificate Number</label>
                             <input type="text" name="med_certificate_number" value="<%= user.medical_cert?.medical?.certificate_number %>">
@@ -696,7 +896,7 @@
                         <input type="checkbox" id="has_yellow_fever" name="has_yellow_fever" <%= user.medical_cert?.has_yellow_fever ? 'checked' : '' %>>
                         <label for="has_yellow_fever" style="margin-bottom:0; font-weight:600;">I have a Yellow Fever Certificate</label>
                     </div>
-                    <div id="yellow_fever_fields" class="form-grid" style="display: <%= user.medical_cert?.has_yellow_fever ? 'grid' : 'none' %>;">
+                    <div id="yellow_fever_fields" class="form-grid <%= user.medical_cert?.has_yellow_fever ? 'visible-grid' : 'hidden' %>">
                         <div class="form-group">
                             <label>Certificate Number</label>
                             <input type="text" name="yf_certificate_number" value="<%= user.medical_cert?.yellow_fever?.certificate_number %>">
@@ -755,12 +955,195 @@
         updateRankOptions();
         departmentSelect.addEventListener('change', updateRankOptions);
 
+        const completionBarFill = document.querySelector('.completion-bar-fill');
+        if (completionBarFill && completionBarFill.dataset.progress) {
+            completionBarFill.style.width = `${completionBarFill.dataset.progress}%`;
+        }
+
         // Toggle medical fields
         document.getElementById('has_medical').addEventListener('change', function() {
             document.getElementById('medical_fields').style.display = this.checked ? 'grid' : 'none';
         });
         document.getElementById('has_yellow_fever').addEventListener('change', function() {
             document.getElementById('yellow_fever_fields').style.display = this.checked ? 'grid' : 'none';
+        });
+
+        // Compute and display age when date of birth is selected
+        function computeAge(dobStr) {
+            if (!dobStr) return '';
+            const dob = new Date(dobStr);
+            if (isNaN(dob)) return '';
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+            return age >= 0 ? age : '';
+        }
+
+        const dobInput = document.getElementById('date_of_birth');
+        const ageDisplay = document.getElementById('age_display');
+        function updateAgeDisplay() {
+            const age = computeAge(dobInput.value);
+            ageDisplay.textContent = age ? `Age: ${age} years` : '';
+        }
+        if (dobInput) {
+            dobInput.addEventListener('change', updateAgeDisplay);
+            // initialize on load
+            updateAgeDisplay();
+        }
+
+        // Auto-calculate expiry dates (10 years from issue date)
+        function addYearsToDate(dateStr, years) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            if (isNaN(date)) return '';
+            date.setFullYear(date.getFullYear() + years);
+            return date.toISOString().split('T')[0];
+        }
+
+        // Passport expiry auto-calculation
+        const passportIssueInput = document.querySelector('input[name="passport_issue_date"]');
+        const passportExpiryInput = document.querySelector('input[name="passport_expiry_date"]');
+        if (passportIssueInput && passportExpiryInput) {
+            passportIssueInput.addEventListener('change', function() {
+                passportExpiryInput.value = addYearsToDate(this.value, 10);
+            });
+        }
+
+        // Seaman book expiry auto-calculation
+        const seamanIssueInput = document.querySelector('input[name="seaman_book_issue_date"]');
+        const seamanExpiryInput = document.querySelector('input[name="seaman_book_expiry_date"]');
+        if (seamanIssueInput && seamanExpiryInput) {
+            seamanIssueInput.addEventListener('change', function() {
+                seamanExpiryInput.value = addYearsToDate(this.value, 10);
+            });
+        }
+
+        // Yellow fever certificate expiry auto-calculation
+        const yfIssueInput = document.querySelector('input[name="yf_issue_date"]');
+        const yfExpiryInput = document.querySelector('input[name="yf_expiry_date"]');
+        if (yfIssueInput && yfExpiryInput) {
+            yfIssueInput.addEventListener('change', function() {
+                yfExpiryInput.value = addYearsToDate(this.value, 10);
+            });
+        }
+
+        // Profile Photo Face Detection
+        let detectedFace = true;
+        let faceValidationFailed = false;
+        const hasExistingProfilePhoto = document.getElementById('photoSection').dataset.hasProfilePhoto === 'true';
+        const profilePhotoInput = document.getElementById('profilePhotoInput');
+        const photoPreview = document.getElementById('photoPreview');
+        const faceDetectionStatus = document.getElementById('faceDetectionStatus');
+        const faceDetectionCanvas = document.getElementById('faceDetectionCanvas');
+
+        function updateFaceStatus(message, className) {
+            faceDetectionStatus.innerHTML = `<span class="${className}">${message}</span>`;
+        }
+
+        async function detectFaces(imageElement) {
+            updateFaceStatus('⏳ Validating photo...', 'status-warning');
+            faceValidationFailed = false;
+
+            try {
+                const detectionPromise = new Promise(async (resolve, reject) => {
+                    const timeoutId = setTimeout(() => reject(new Error('Detection timeout')), 5000);
+
+                    if (typeof tf === 'undefined' || typeof faceDetection === 'undefined') {
+                        clearTimeout(timeoutId);
+                        resolve(null);
+                        return;
+                    }
+
+                    try {
+                        const model = faceDetection.SupportedModels.BlazeFace;
+                        const detectorConfig = { maxFaces: 5 };
+                        const detector = await faceDetection.createDetector(model, detectorConfig);
+                        const predictions = await detector.estimateFaces(imageElement, false);
+                        clearTimeout(timeoutId);
+                        resolve(predictions);
+                    } catch (err) {
+                        clearTimeout(timeoutId);
+                        reject(err);
+                    }
+                });
+
+                const predictions = await detectionPromise;
+
+                if (predictions === null) {
+                    detectedFace = true;
+                    updateFaceStatus('✓ Photo loaded. If your face is clearly visible, this image is acceptable.', 'status-success');
+                } else if (predictions.length === 0) {
+                    detectedFace = true;
+                    updateFaceStatus('⚠ Automatic detection could not find a face. If the photo clearly shows only your face, you can still use it.', 'status-warning');
+                } else if (predictions.length === 1) {
+                    detectedFace = true;
+                    updateFaceStatus('✓ Face detected. This photo looks good.', 'status-success');
+                } else {
+                    detectedFace = false;
+                    faceValidationFailed = true;
+                    updateFaceStatus(`❌ Multiple faces detected (${predictions.length}). Please upload a single headshot.`, 'status-danger');
+                }
+            } catch (error) {
+                console.error('Face detection error:', error);
+                detectedFace = true;
+                faceValidationFailed = false;
+                updateFaceStatus('⚠ Photo validation could not complete. If your face is clearly visible, it is acceptable.', 'status-warning');
+            }
+        }
+
+        profilePhotoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    faceDetectionStatus.innerHTML = '<span style="color: #ef4444;">❌ File size too large. Max 5MB allowed.</span>';
+                    profilePhotoInput.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Update preview
+                        if (typeof photoPreview.src === 'string') {
+                            photoPreview.src = event.target.result;
+                            photoPreview.style.width = '200px';
+                            photoPreview.style.height = '250px';
+                            photoPreview.style.borderRadius = '8px';
+                            photoPreview.style.objectFit = 'cover';
+                            photoPreview.style.border = '2px solid #e2e8f0';
+                        } else {
+                            photoPreview.innerHTML = '';
+                            const newImg = document.createElement('img');
+                            newImg.src = event.target.result;
+                            newImg.style.width = '200px';
+                            newImg.style.height = '250px';
+                            newImg.style.borderRadius = '8px';
+                            newImg.style.objectFit = 'cover';
+                            newImg.style.border = '2px solid #e2e8f0';
+                            photoPreview.appendChild(newImg);
+                        }
+
+                        // Detect faces
+                        detectFaces(img);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Prevent form submission if photo not properly validated
+        document.querySelector('form').addEventListener('submit', function(e) {
+            if (profilePhotoInput.files.length === 0 && !hasExistingProfilePhoto) {
+                e.preventDefault();
+                alert('Please upload a profile photo before saving.');
+            } else if (faceValidationFailed) {
+                e.preventDefault();
+                alert('Multiple faces were detected in the selected photo. Please upload a single-person headshot.');
+            }
         });
     </script>
 </body>

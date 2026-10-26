@@ -1,3 +1,134 @@
+# KAMI MARINE
+
+KAMI MARINE is an Express and EJS crew portal for seafarer registration, profiles, documents, experience, and administration.
+
+## Local Deployment
+
+Requirements: Node.js 18 or newer and MySQL.
+
+Install dependencies and start the local server:
+
+```powershell
+npm install
+$env:NODE_ENV = "development"
+$env:APP_URL = "http://localhost:3000"
+npm start
+```
+
+The application is available at `http://localhost:3000`. Import [database/kamilmwg_tutorial.sql](database/kamilmwg_tutorial.sql) into a local MySQL database and configure the `DB_*` variables described below.
+
+For local Google OAuth testing, add this redirect URI in Google Cloud Console:
+
+```text
+http://localhost:3000/auth/google/callback
+```
+
+Use the matching local callback in your environment configuration:
+
+```env
+NODE_ENV=development
+APP_URL=http://localhost:3000
+GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
+SESSION_SECRET=local-development-secret
+```
+
+Google sign-in is available when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are configured. The current app stores accounts in memory, so newly registered or Google-linked accounts are lost when the server restarts.
+
+## Unit Testing
+
+Run the test suite with:
+
+```powershell
+npm test
+```
+
+The project uses Node.js's built-in test runner, so no test framework is required. Add test files using the `*.test.js` or `*.spec.js` naming convention, preferably inside a `test/` directory:
+
+```js
+const test = require('node:test');
+const assert = require('node:assert/strict');
+
+test('example', () => {
+	assert.equal(1 + 1, 2);
+});
+```
+
+Unit tests should not use production credentials or modify the production database. Use a separate test database and environment variables such as `DB_NAME=kamilmwg_tutorial_test`. For route-level tests, export the Express app without starting the server and use a request-testing library such as `supertest`.
+
+The current application is primarily contained in [app.js](app.js), uses in-memory `mockUsers`, and starts the server immediately. Refactoring authentication and database access into modules will make isolated unit testing easier.
+
+## Production Setup
+
+Requirements: Node.js 18 or newer, MySQL, an HTTPS domain, and a hosting provider that can configure environment variables.
+
+```powershell
+npm install
+npm install
+$env:NODE_ENV = "production"
+npm start
+```
+
+Set `NODE_ENV`, `PORT`, `APP_URL`, `SESSION_SECRET`, and the database values in the hosting provider's environment settings. Do not commit production secrets or a `.env` file. Import [database/kamilmwg_tutorial.sql](database/kamilmwg_tutorial.sql) into the production MySQL database before starting the application.
+
+Use these database environment variables:
+
+```env
+DB_HOST=your-production-mysql-host
+DB_PORT=3306
+DB_USER=your-production-mysql-user
+DB_PASSWORD=your-production-mysql-password
+DB_NAME=kamilmwg_tutorial
+```
+
+## Google Sign-In
+
+Google sign-in uses OAuth 2.0. Production Google sign-in must use the deployed HTTPS domain; localhost callback URLs are not part of the production setup. Use Google's stable profile ID (`google_id`) to link accounts, while keeping the existing email/password login available.
+
+### 1. Create Google OAuth credentials
+
+In [Google Cloud Console](https://console.cloud.google.com/):
+
+1. Create or select a project.
+2. Configure the OAuth consent screen.
+3. Create an OAuth client ID for a web application.
+4. Add this authorized redirect URI, replacing the domain with the real production domain:
+
+```text
+https://your-production-domain.example/auth/google/callback
+```
+
+The callback URL must match the configured application callback exactly, including the HTTPS scheme and path.
+
+### 2. Configure environment variables
+
+Create a `.env` file in the project root for local development (or set these values in the hosting provider). Do not commit the file:
+
+```env
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_CLIENT_SECRET=your-client-secret
+NODE_ENV=production
+APP_URL=https://your-production-domain.example
+GOOGLE_CALLBACK_URL=https://your-production-domain.example/auth/google/callback
+SESSION_SECRET=use-a-long-random-value
+```
+
+Keep the session secret and Google client secret private.
+
+When both Google credentials are present, separate Google buttons appear on the login and registration pages. Google sign-in only succeeds for an account already linked to that Google ID. New users must choose Google account creation first. New Google accounts use Google's first name, last name, and verified email; other crew profile fields start blank for the user to fill in. During Google registration, a verified email matching an existing unlinked account is linked to it without replacing its existing profile details; an email already linked to another Google ID is rejected. A Google-only user can set a local password in **Password Settings** after signing in; users who already have a password must provide it to change it.
+
+User records are currently held in the in-memory `mockUsers` array in [app.js](app.js). Google account creation, account linking, and password changes work with this development store, but changes are lost on restart and are not shared across multiple server instances. Use persistent user storage with unique email and Google ID constraints before relying on these features in production.
+
+## Production Checklist
+
+- Use an HTTPS domain and configure the exact Google callback URL in Google Cloud Console.
+- Set `NODE_ENV=production` and a long, random `SESSION_SECRET` in the hosting platform.
+- Keep `GOOGLE_CLIENT_SECRET` and database credentials in hosting-provider secrets.
+- Run behind the platform's reverse proxy with secure cookies enabled.
+- Use a persistent MySQL database rather than the in-memory `mockUsers` array.
+- Remove the sample admin credentials and replace the hard-coded admin authentication before deployment.
+
+---
+
 # Manning-Test
 
 

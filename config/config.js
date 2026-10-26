@@ -1,6 +1,7 @@
 module.exports = {
-  host: 'localhost',
-  username: 'root',
-  password: '',
-  database: 'kamilmwg_tutorial'
+  host: process.env.DB_HOST || 'localhost',
+  username: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'kamilmwg_tutorial',
+  port: Number(process.env.DB_PORT || 3306)
 };

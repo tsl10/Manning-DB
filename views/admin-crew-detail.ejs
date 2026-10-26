@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crew Details - KAMI MARINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        header {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0f172a;
+            text-decoration: none;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-outline:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .btn-primary {
+            background-color: #0f172a;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #1e293b;
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-success {
+            background-color: #10b981;
+            color: #ffffff;
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .detail-container {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #0f172a;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 24px;
+            color: #64748b;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+        }
+
+        .list-item {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .list-item-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .list-item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .list-item-field-label {
+            color: #64748b;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+
+        .subsection-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 16px 0 12px 0;
+            color: #475569;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .action-buttons .btn {
+            padding: 12px 24px;
+            font-size: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .detail-container {
+                padding: 20px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 22px;
+            }
+
+            .section-title {
+                font-size: 16px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="logo">KAMI MARINE</a>
+            <div style="display: flex; gap: 12px;">
+                <a href="/admin/dashboard" class="btn btn-outline">Back to Dashboard</a>
+                <a href="/logout" class="btn btn-outline">Logout</a>
+            </div>
+        </header>
+
+        <div class="page-header">
+            <a href="/admin/dashboard">← Back to Dashboard</a>
+            <h1><%= user.fname %> <%= user.lname %></h1>
+        </div>
+
+        <div class="detail-container">
+            <!-- 0. Profile Photo -->
+            <div class="section">
+                <h3 class="section-title">Profile Photo</h3>
+                <div style="text-align: center;">
+                    <% if (user.profile_photo) { %>
+                        <img src="<%= user.profile_photo %>" style="width: 250px; height: 300px; border-radius: 8px; object-fit: cover; border: 2px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <% } else { %>
+                        <div style="width: 250px; height: 300px; margin: 0 auto; background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #94a3b8;">
+                            No profile photo on file
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- 1. Personal Summary -->
+            <div class="section">
+                <h3 class="section-title">Personal Summary</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value"><%= user.email %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Phone Number</div>
+                        <div class="info-value"><%= user.phone_number || 'N/A' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Department</div>
+                        <div class="info-value"><%= user.department %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Rank / Position</div>
+                        <div class="info-value"><%= user.rank %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Gender</div>
+                        <div class="info-value"><%= user.gender || 'N/A' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Date of Birth</div>
+                        <div class="info-value"><%= user.date_of_birth || 'N/A' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nationality</div>
+                        <div class="info-value"><%= user.nationality || 'N/A' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Marital Status</div>
+                        <div class="info-value"><%= user.marital_status || 'N/A' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Date Available</div>
+                        <div class="info-value"><%= user.date_available %></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Physical Information -->
+            <div class="section">
+                <h3 class="section-title">Physical Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Height (cm)</div>
+                        <div class="info-value"><%= user.height_cm || 'N/A' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Weight (kg)</div>
+                        <div class="info-value"><%= user.weight_kg || 'N/A' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Eye Color</div>
+                        <div class="info-value"><%= user.eye_color || 'N/A' %></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Place of Birth</div>
+                        <div class="info-value"><%= user.place_of_birth || 'N/A' %></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Experience Summary -->
+            <div class="section">
+                <h3 class="section-title">Experience Summary</h3>
+                <% 
+                    let totalMonths = 0;
+                    if (user.experiences && user.experiences.length > 0) {
+                        totalMonths = user.experiences.reduce((sum, exp) => sum + (parseInt(exp.months) || 0), 0);
+                    }
+                    const years = Math.floor(totalMonths / 12);
+                    const months = totalMonths % 12;
+                %>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Total Experience</div>
+                        <div class="info-value"><strong><%= years > 0 ? years + ' years ' : '' %><%= months %> months</strong></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Number of Vessels</div>
+                        <div class="info-value"><strong><%= user.experiences ? user.experiences.length : 0 %></strong></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Last Vessel Type</div>
+                        <div class="info-value"><%= user.experiences && user.experiences.length > 0 ? user.experiences[user.experiences.length - 1].type : 'N/A' %></div>
+                    </div>
+                </div>
+
+                <h4 class="subsection-title">Experience History</h4>
+                <% if (user.experiences && user.experiences.length > 0) { %>
+                    <% user.experiences.forEach(exp => { %>
+                        <div class="list-item">
+                            <div class="list-item-header"><%= exp.vessel_name %> | <%= exp.rank %></div>
+                            <div class="list-item-grid">
+                                <div>
+                                    <div class="list-item-field-label">Company</div>
+                                    <div><%= exp.company_name %></div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Vessel Type</div>
+                                    <div><%= exp.type %></div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Duration</div>
+                                    <div><%= exp.months %> months</div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Sign On</div>
+                                    <div><%= exp.sign_on %></div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Sign Off</div>
+                                    <div><%= exp.sign_off %></div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="empty-state">No experience records found</div>
+                <% } %>
+            </div>
+
+            <!-- 4. Passport Information -->
+            <div class="section">
+                <h3 class="section-title">Passport Information</h3>
+                <% if (user.passport && user.passport.number) { %>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Passport Number</div>
+                            <div class="info-value"><%= user.passport.number %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Issue Date</div>
+                            <div class="info-value"><%= user.passport.issue_date %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Expiry Date</div>
+                            <div class="info-value"><%= user.passport.expiry_date %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Issue Place</div>
+                            <div class="info-value"><%= user.passport.place_of_issue %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Issued By</div>
+                            <div class="info-value"><%= user.passport.issued_by %></div>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="empty-state">No passport information on file</div>
+                <% } %>
+            </div>
+
+            <!-- 5. Seaman Book -->
+            <div class="section">
+                <h3 class="section-title">Seaman Book</h3>
+                <% if (user.seaman_book && user.seaman_book.number) { %>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Seaman Book Number</div>
+                            <div class="info-value"><%= user.seaman_book.number %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Issue Date</div>
+                            <div class="info-value"><%= user.seaman_book.issue_date %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Expiry Date</div>
+                            <div class="info-value"><%= user.seaman_book.expiry_date %></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Issued By</div>
+                            <div class="info-value"><%= user.seaman_book.issued_by %></div>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="empty-state">No seaman book information on file</div>
+                <% } %>
+            </div>
+
+            <!-- 6. Certificates -->
+            <div class="section">
+                <h3 class="section-title">Certificates</h3>
+                <% if (user.certificates && user.certificates.length > 0) { %>
+                    <% user.certificates.forEach(cert => { %>
+                        <div class="list-item">
+                            <div class="list-item-header"><%= cert.name %></div>
+                            <div class="list-item-grid">
+                                <div>
+                                    <div class="list-item-field-label">Certificate No</div>
+                                    <div><%= cert.certificate_no %></div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Issue Date</div>
+                                    <div><%= cert.issue_date %></div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Expiry Date</div>
+                                    <div><%= cert.expiry_date %></div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Issued By</div>
+                                    <div><%= cert.issued_by %></div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="empty-state">No certificates on file</div>
+                <% } %>
+            </div>
+
+            <!-- 7. Licences -->
+            <div class="section">
+                <h3 class="section-title">Licences & Documents</h3>
+                <% if (user.licences && user.licences.length > 0) { %>
+                    <% user.licences.forEach(lic => { %>
+                        <div class="list-item">
+                            <div class="list-item-header"><%= lic.name %> (<%= lic.type %>)</div>
+                            <div class="list-item-grid">
+                                <div>
+                                    <div class="list-item-field-label">Number</div>
+                                    <div><%= lic.number %></div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Grade</div>
+                                    <div><%= lic.grade || '-' %></div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Issue Date</div>
+                                    <div><%= lic.issue_date %></div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Expiry Date</div>
+                                    <div><%= lic.expiry_date %></div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Issued Place</div>
+                                    <div><%= lic.issued_place %></div>
+                                </div>
+                                <div>
+                                    <div class="list-item-field-label">Issued By</div>
+                                    <div><%= lic.issued_by %></div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="empty-state">No licences on file</div>
+                <% } %>
+            </div>
+
+            <!-- 8. Medical Certificates -->
+            <div class="section">
+                <h3 class="section-title">Medical & Fitness Certificates</h3>
+                <% if (user.medical_cert && (user.medical_cert.has_medical || user.medical_cert.has_yellow_fever)) { %>
+                    <% if (user.medical_cert.has_medical && user.medical_cert.medical) { %>
+                        <h4 class="subsection-title">Medical & Fitness Certificate</h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Certificate Number</div>
+                                <div class="info-value"><%= user.medical_cert.medical.certificate_number %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Issued By</div>
+                                <div class="info-value"><%= user.medical_cert.medical.issued_by %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Issue Date</div>
+                                <div class="info-value"><%= user.medical_cert.medical.issue_date %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Expiry Date</div>
+                                <div class="info-value"><%= user.medical_cert.medical.expiry_date %></div>
+                            </div>
+                        </div>
+                    <% } %>
+                    <% if (user.medical_cert.has_yellow_fever && user.medical_cert.yellow_fever) { %>
+                        <h4 class="subsection-title">Yellow Fever Certificate</h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Certificate Number</div>
+                                <div class="info-value"><%= user.medical_cert.yellow_fever.certificate_number %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Issued By</div>
+                                <div class="info-value"><%= user.medical_cert.yellow_fever.issued_by %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Issue Date</div>
+                                <div class="info-value"><%= user.medical_cert.yellow_fever.issue_date %></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Expiry Date</div>
+                                <div class="info-value"><%= user.medical_cert.yellow_fever.expiry_date %></div>
+                            </div>
+                        </div>
+                    <% } %>
+                <% } else { %>
+                    <div class="empty-state">No medical certificates on file</div>
+                <% } %>
+            </div>
+
+            <!-- 9. Action Buttons -->
+            <div class="action-buttons">
+                <a href="/admin/dashboard" class="btn btn-outline">Back to Dashboard</a>
+                <a href="/admin/crew/<%= user.user_id %>/edit" class="btn btn-success">Edit Crew Member</a>
+                <button onclick="if(confirm('Are you sure you want to delete this crew member? This action cannot be undone.')) { window.location.href='/admin/crew/<%= user.user_id %>/delete'; }" class="btn btn-danger">Delete Crew Member</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

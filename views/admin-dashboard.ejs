@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1500px;
             margin: 0 auto;
             padding: 0 24px;
         }
@@ -290,25 +290,47 @@
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Position</th>
+                            <th>Department / Rank</th>
                             <th>Phone</th>
+                            <th>Total Experience</th>
+                            <th>Last Vessel Type</th>
                             <th>Date Available</th>
-                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% users.forEach(function(user) { %>
+                        <% users.forEach(function(user) { 
+                            let totalMonths = 0;
+                            let lastVesselType = 'N/A';
+                            
+                            if (user.experiences && user.experiences.length > 0) {
+                                totalMonths = user.experiences.reduce((sum, exp) => sum + (parseInt(exp.months) || 0), 0);
+                                lastVesselType = user.experiences[user.experiences.length - 1].type || 'N/A';
+                            }
+                            
+                            const years = Math.floor(totalMonths / 12);
+                            const months = totalMonths % 12;
+                            const expDisplay = years > 0 ? `${years}y ${months}m` : `${months}m`;
+                        %>
                             <tr>
                                 <td>
-                                    <div class="user-name"><%= user.FNAME %> <%= user.LNAME %></div>
+                                    <div class="user-name"><%= user.fname %> <%= user.lname %></div>
                                 </td>
                                 <td>
-                                    <div class="user-email"><%= user.EMAIL %></div>
+                                    <div class="user-email"><%= user.email %></div>
                                 </td>
-                                <td><%= user.position_applied %></td>
-                                <td><%= user.PHONE_NUMBER %></td>
+                                <td><%= user.department %> / <strong><%= user.rank %></strong></td>
+                                <td><%= user.phone_number %></td>
+                                <td><strong><%= expDisplay %></strong></td>
+                                <td><%= lastVesselType %></td>
                                 <td><%= user.date_available %></td>
-                                <td><span class="status-badge">Active</span></td>
+                                <td style="text-align: center;">
+                                    <div style="display: flex; gap: 8px; justify-content: center;">
+                                        <a href="/admin/crew/<%= user.user_id %>" style="color: #3b82f6; text-decoration: none; font-weight: 600; font-size: 14px;" title="View Details">👁️ View</a>
+                                        <a href="/admin/crew/<%= user.user_id %>/edit" style="color: #10b981; text-decoration: none; font-weight: 600; font-size: 14px;" title="Edit">✏️ Edit</a>
+                                        <button onclick="if(confirm('Are you sure you want to delete this crew member?')) { window.location.href='/admin/crew/<%= user.user_id %>/delete'; }" style="background: none; border: none; color: #ef4444; cursor: pointer; font-weight: 600; font-size: 14px;" title="Delete">🗑️ Delete</button>
+                                    </div>
+                                </td>
                             </tr>
                         <% }); %>
                     </tbody>

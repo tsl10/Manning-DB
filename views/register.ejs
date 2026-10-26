@@ -115,6 +115,34 @@
             transform: translateY(-1px);
         }
 
+        .btn-google {
+            display: block;
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px 24px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #0f172a;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-google:hover {
+            background: #f8fafc;
+        }
+
+        .auth-error {
+            margin-bottom: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #fef2f2;
+            color: #b91c1c;
+            font-size: 14px;
+        }
+
         .auth-footer {
             text-align: center;
             margin-top: 24px;
@@ -148,7 +176,9 @@
                 <h1>Create your seafarer record</h1>
             </div>
 
-
+            <% if (googleError) { %>
+                <div class="auth-error" role="alert"><%= googleError %></div>
+            <% } %>
 
             <form method="POST" action="/register">
                 <div class="form-group">
@@ -161,10 +191,14 @@
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" name="pass" placeholder="Enter your password" required>
+                    <input type="password" name="pass" placeholder="Enter your password" minlength="8" required>
                 </div>
                 <button type="submit" class="btn-primary">Create account</button>
             </form>
+
+            <% if (googleAuthEnabled) { %>
+                <a href="/auth/google?mode=register" class="btn-google">Create account with Google</a>
+            <% } %>
 
             <div class="auth-footer">
                 Already have an account? <a href="/login">Sign in</a>
